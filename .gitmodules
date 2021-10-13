@@ -1,0 +1,18 @@
+[submodule "deps/robot_dart"]
+	path = deps/robot_dart
+	url = https://github.com/resibots/robot_dart.git
+[submodule "deps/limbo"]
+	path = deps/limbo
+	url = https://github.com/resibots/limbo.git
+[submodule "deps/libcmaes"]
+	path = deps/libcmaes
+	url = https://github.com/resibots/libcmaes.git
+[submodule "deps/simple_nn"]
+	path = deps/simple_nn
+	url = https://github.com/resibots/simple_nn.git
+[submodule "deps/BehaviorTree.CPP"]
+	path = deps/BehaviorTree.CPP
+	url = https://github.com/BehaviorTree/BehaviorTree.CPP/
+[submodule "deps/dart"]
+	path = deps/dart
+	url = https://github.com/dartsim/dart.git
