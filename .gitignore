@@ -1,0 +1,11 @@
+*.pyc
+params_*
+*.log
+*.orig
+.clang-format
+.vscode
+deps
+install
+model_learn*
+*.dat
+*.bin
