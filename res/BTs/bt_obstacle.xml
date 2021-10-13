@@ -1,0 +1,41 @@
+<root main_tree_to_execute = "ObstacleTree">
+    <BehaviorTree ID="ObstacleTree">
+        <ReactiveFallback name="root_sequence">
+            <EEPositionDistance name="goal_check"
+                    threshold="0.05"
+                    target_x="-0.5"
+                    target_y="0.0"
+                    target_z="0.8"
+                    ee_x="{ee_x}"
+                    ee_y="{ee_y}"
+                    ee_z="{ee_z}"/>
+            <ReactiveSequence name="3-goal">
+                <EEYThreshold   name="ee_y_threshold" threshold="{y_threshold}" ee_y="{ee_y}" above="false"/> 
+                <SetMGGoal   name="mg_goal3"
+                    mp_param_x="{mp_3_x}"
+                    mp_param_y="{mp_3_y}"
+                    mp_param_z="{mp_3_z}"
+                    mg_trans_x="{mg_trans_x}"
+                    mg_trans_y="{mg_trans_y}"
+                    mg_trans_z="{mg_trans_z}"/>
+            </ReactiveSequence>
+            <ReactiveSequence name="2-traverse">
+                <EEZThreshold   name="ee_z_threshold" threshold="{z_threshold}" ee_z="{ee_z}" above="true"/> 
+                <SetMGGoal   name="mg_goal2"
+                    mp_param_x="{mp_2_x}"
+                    mp_param_y="{mp_2_y}"
+                    mp_param_z="{mp_2_z}"
+                    mg_trans_x="{mg_trans_x}"
+                    mg_trans_y="{mg_trans_y}"
+                    mg_trans_z="{mg_trans_z}"/>
+            </ReactiveSequence>
+            <SetMGGoal   name="mg_goal1"
+                    mp_param_x="{mp_1_x}"
+                    mp_param_y="{mp_1_y}"
+                    mp_param_z="{mp_1_z}"
+                    mg_trans_x="{mg_trans_x}"
+                    mg_trans_y="{mg_trans_y}"
+                    mg_trans_z="{mg_trans_z}"/>
+        </ReactiveFallback>
+    </BehaviorTree>
+</root>

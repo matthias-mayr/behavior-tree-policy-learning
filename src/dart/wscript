@@ -1,0 +1,119 @@
+# | Copyright Inria July 2017
+# |
+# | Contributor(s):
+# |   - Konstantinos Chatzilygeroudis (konstantinos.chatzilygeroudis@inria.fr)
+# |   - Rituraj Kaushik (rituraj.kaushik@inria.fr)
+# |   - Roberto Rama (bertoski@gmail.com)
+# |
+# | Base repository: http://github.com/resibots/blackdrops
+# | Preprint: https://arxiv.org/abs/1703.07261
+# |
+# |
+# | Copyright Matthias Mayr October 2021
+# |
+# | Code repository: https://github.com/matthias-mayr/behavior-tree-policy-learning
+# | Preprint: https://arxiv.org/abs/2109.13050
+# |
+# | Adaption of Black-DROPS to learning behavior trees and contact-rich tasks.
+# |
+# | This software is governed by the CeCILL-C license under French law and
+# | abiding by the rules of distribution of free software.  You can  use,
+# | modify and/ or redistribute the software under the terms of the CeCILL-C
+# | license as circulated by CEA, CNRS and INRIA at the following URL
+# | "http://www.cecill.info".
+# |
+# | As a counterpart to the access to the source code and  rights to copy,
+# | modify and redistribute granted by the license, users are provided only
+# | with a limited warranty  and the software's author,  the holder of the
+# | economic rights,  and the successive licensors  have only  limited
+# | liability.
+# |
+# | In this respect, the user's attention is drawn to the risks associated
+# | with loading,  using,  modifying and/or developing or reproducing the
+# | software by the user in light of its specific status of free software,
+# | that may mean  that it is complicated to manipulate,  and  that  also
+# | therefore means  that it is reserved for developers  and  experienced
+# | professionals having in-depth computer knowledge. Users are therefore
+# | encouraged to load and test the software's suitability as regards their
+# | requirements in conditions enabling the security of their systems and/or
+# | data to be ensured and,  more generally, to use and operate it in the
+# | same conditions as regards security.
+# |
+# | The fact that you are presently reading this means that you have had
+# | knowledge of the CeCILL-C license and that you accept its terms.
+# |
+import limbo
+import glob
+import ros
+import glog
+from waflib import Logs
+
+
+def build(bld):
+    dart_libs = 'TBB EIGEN BOOST LIMBO LIBCMAES NLOPT SFERES2 ROBOT_DART DART BOOST_DART THREADS SIMPLE_NN ROS GLOG BTCPP'
+    dart_libs_graphic = dart_libs + ' DART_GRAPHIC'
+
+    path = bld.path.abspath()[:-len('src/dart/blackdrops/exp/limbo/deps')] + 'res'
+
+    if 'INCLUDES_ROBOT_DART' not in bld.get_env() or 'INCLUDES_DART' not in bld.get_env():
+        Logs.pprint(
+            'YELLOW', 'Dart or robot_dart not found in your system. Will not build DART scenarios')
+        return
+
+    cxxflags = bld.get_env()['CXXFLAGS']
+
+    # Add targets
+    files = glob.glob(bld.path.abspath() + "/*.cpp")
+    dual_build_targets = ['iiwa_skills_peg',
+                          'iiwa_skills_obstacle', 'iiwa_skills_obstacle_and_peg']
+    graphic_targets = ['play_params_skills_peg',
+                       'play_params_skills_obstacle', 'play_params_skills_obstacle_and_peg']
+    if 'INCLUDES_ROS' in bld.get_env():
+        simu_targets = ["iiwa_skills_execution"]
+    else:
+        Logs.pprint('YELLOW', 'ROS not found in your system. Will build without support for execution on the real system.')
+        simu_targets = []
+
+    # Compile new targets
+    for target in dual_build_targets:
+        limbo.create_variants(bld,
+                              source=target + '.cpp',
+                              includes='. ../../../../src ../ ../../include',
+                              target=target,
+                              uselib=dart_libs,
+                              uselib_local='limbo',
+                              cxxflags=cxxflags + ['-DRESPATH="' + path + '"'],
+                              variants=['SIMU'])
+
+        if bld.get_env()['BUILD_GRAPHIC'] == True:
+            limbo.create_variants(bld,
+                                  source=target + '.cpp',
+                                  includes='. ../../../../src ../ ../../include',
+                                  target=target,
+                                  uselib=dart_libs_graphic,
+                                  uselib_local='limbo',
+                                  cxxflags=cxxflags + ['-DRESPATH="' + path + '"'],
+                                  variants=['GRAPHIC'])
+
+    # Simu targets
+    for target in simu_targets:
+        limbo.create_variants(bld,
+                              source=target + '.cpp',
+                              includes='. ../../../../src ../ ../../include',
+                              target=target,
+                              uselib=dart_libs,
+                              uselib_local='limbo',
+                              cxxflags=cxxflags + ['-DRESPATH="' + path + '"'],
+                              variants=['SIMU'])
+
+    # Graphic targets
+    for target in graphic_targets:
+        if bld.get_env()['BUILD_GRAPHIC'] == True:
+            limbo.create_variants(bld,
+                                  source=target + '.cpp',
+                                  includes='. ../../../../src ../ ../../include',
+                                  target=target,
+                                  uselib=dart_libs_graphic,
+                                  uselib_local='limbo',
+                                  cxxflags=cxxflags + ['-DRESPATH="' + path + '"'],
+                                  variants=['GRAPHIC'])

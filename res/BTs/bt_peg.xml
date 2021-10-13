@@ -1,0 +1,60 @@
+<root main_tree_to_execute = "PegTree" >
+    <BehaviorTree ID="PegTree">
+    <ReactiveFallback name="root_sequence">
+        <ReactiveSequence name="goal_condition">
+            <EEPositionDistance name="goal_check"
+                threshold="0.05"
+                target_x="-0.6"
+                target_y="0.0"
+                target_z="0.64"
+                ee_x="{ee_x}"
+                ee_y="{ee_y}"
+                ee_z="{ee_z}"/>
+            <Parallel name="mg_config_goal_and_check" success_threshold="1" failure_threshold="1">
+                <SetMGSin   name="mg_sinus"
+                    mp_ampl="0"
+                    mp_freq="0"
+                    mg_ampl="{mg_ampl}"
+                    mg_freq="{mg_freq}"/>
+                <SetMGGoal   name="mg_goal1"
+                    mp_param_x="-0.6"
+                    mp_param_y="0.0"
+                    mp_param_z="0.73"
+                    mg_trans_x="{mg_trans_x}"
+                    mg_trans_y="{mg_trans_y}"
+                    mg_trans_z="{mg_trans_z}"/>
+                <EEPositionDistance name="goal_check"
+                    threshold="0.05"
+                    target_x="-0.6"
+                    target_y="0.0"
+                    target_z="0.64"
+                    ee_x="{ee_x}"
+                    ee_y="{ee_y}"
+                    ee_z="{ee_z}"/>
+            </Parallel>
+        </ReactiveSequence>
+        <ReactiveSequence name="search_motion">
+            <EEZThreshold   name="ee_z_threshold" threshold="{z_threshold}" ee_z="{ee_z}" above="false"/>
+                <SetMGSin   name="mg_sinus"
+                    mp_ampl="{mp_ampl}"
+                    mp_freq="{mp_freq}"
+                    mg_ampl="{mg_ampl}"
+                    mg_freq="{mg_freq}"/>
+        </ReactiveSequence>
+        <Parallel name="mg_config" success_threshold="1" failure_threshold="1">
+            <SetMGSin   name="mg_sinus"
+                mp_ampl="0"
+                mp_freq="0"
+                mg_ampl="{mg_ampl}"
+                mg_freq="{mg_freq}"/>
+            <SetMGGoal   name="mg_goal1"
+                mp_param_x="{mp_1_x}"
+                mp_param_y="{mp_1_y}"
+                mp_param_z="{mp_1_z}"
+                mg_trans_x="{mg_trans_x}"
+                mg_trans_y="{mg_trans_y}"
+                mg_trans_z="{mg_trans_z}"/>
+        </Parallel>
+    </ReactiveFallback>
+    </BehaviorTree>
+</root>
