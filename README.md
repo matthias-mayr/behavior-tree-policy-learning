@@ -10,7 +10,8 @@ In short, we combine behavior trees (BT), a motion generation and movements skil
 - Matthias Mayr - development of the BT integration, domain randomization, BTMS strategy
 - Konstantinos Chatzilygeroudis: http://costashatz.github.io/ - development of original [Black-DROPS](https://github.com/resibots/blackdrops) code
 
-*Please note that we forked our own code and work on a different code basis right now. This repository is intended to make our results and ideas accessible for other people, but will not receive major updates.*
+*Please note that we forked our own code and work on a different code basis right now. This repository is intended to make our results and ideas accessible for other people, but will not receive major updates.*<br>
+The next generation is available here: https://github.com/matthias-mayr/SkiREIL
 
 ### Installation and Compilation
 
